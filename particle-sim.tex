@@ -1,0 +1,359 @@
+\documentclass[12pt]{article}
+
+\setlength{\parindent}{0em}
+\setlength{\parskip}{.5em}
+
+\usepackage{framed}
+\newcounter{problem}
+\newcounter{problempart}[problem]
+\newcounter{solutionpart}[problem]
+\newenvironment{problem}{\stepcounter{problem}\noindent{\bf\arabic{problem}.}}{\setcounter{problempart}{0}\setcounter{solutionpart}{0}}
+\newenvironment{solution}{\par\textcolor{green!50!black}\bgroup}{\egroup\par}
+\newcommand{\qpart}{\stepcounter{problempart}${}$\\\noindent{(\alph{problempart})} }
+\newcommand{\spart}{\stepcounter{solutionpart}${}$\\\noindent{(\alph{solutionpart})} }
+\newcommand{\TODO}{\textcolor{red}{$\blacksquare$}}
+\newcommand{\SOL}[1]{\textcolor{green!50!black}{#1}}
+
+\usepackage{hyperref}
+\usepackage{fullpage}
+\usepackage{amsmath,mathabx,MnSymbol}
+\usepackage{color,tikz}
+\usepackage{pstricks}
+\usepackage{pst-plot,pst-node}
+\usepackage{footnote,enumitem}
+\usepackage{longtable}
+\newcommand{\mx}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\definecolor{dkgreen}{rgb}{0,.5,0}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\newcommand{\uu}{\mathbf{u}}
+\newcommand{\vv}{\mathbf{v}}
+\newcommand{\cc}{\mathbf{c}}
+\newcommand{\ww}{\mathbf{w}}
+\newcommand{\xx}{\mathbf{x}}
+\newcommand{\zz}{\mathbf{z}}
+\newcommand{\ee}{\mathbf{e}}
+\newcommand{\pp}{\mathbf{p}}
+\newcommand{\qq}{\mathbf{q}}
+\renewcommand{\AA}{\mathbf{A}}
+\newcommand{\BB}{\mathbf{B}}
+\newcommand{\nn}{\mathbf{n}}
+\newcommand{\gp}[1]{\left(#1\right)}
+
+\newcommand{\TODOL}[1]{\textcolor{red}{\underline{\hspace{#1 cm}}}}
+
+\usepackage{listings}
+
+\lstset{
+  language=C++,
+  showstringspaces=false,
+  identifierstyle=\color{magenta},
+  basicstyle=\color{magenta},
+  keywordstyle=\color{blue},
+  identifierstyle=\color{black},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{red}
+}
+
+\begin{document}
+
+\title{CS130 - LAB - Particle Simulations}
+\date{}
+\author{Name: \TODOL7\qquad\qquad SID: \TODOL4}
+\maketitle
+\begin{center}
+\end{center}
+
+In particle simulations, each particle's dynamic state (position,
+velocity, acceleration, etc) is modeled independently of the particle's
+visual state (color, shape, texture, etc). The frame rate of the dynamic
+update may be different from the rendering frame rate.
+
+\textbf{Read the accompaning document (particle.pdf) and answer the following questions.}
+
+You may assume the following variables are available for each particle.
+
+~~~~~\textbf{m:} mass of a particle
+
+~~~~~\textbf{x:} position of a particle
+
+~~~~~\textbf{v:} velocity of a particle
+
+~~~~~\textbf{f:} force applied on a particle
+
+\begin{problem}
+Write the explicit Euler update formula for a particle with the
+properties given above:
+\end{problem}
+\begin{solution}
+  \textbf{\textcolor{red}{\TODO}}
+\end{solution}
+\begin{problem}
+What does h represent in this equation?
+\end{problem}
+\begin{solution}
+  \textbf{\textcolor{red}{\TODO}}
+\end{solution}
+
+\begin{problem}
+Select more or less: Smaller steps typically result in more/less physically accurate and stable solutions, but require more/less iterations.
+\end{problem}
+\begin{solution}
+  \textbf{\textcolor{red}{\TODO}}
+\end{solution}
+
+\begin{problem}
+Write the pseudocode for the explicit Euler update. You may assume the availability of the particle variables.
+\end{problem}
+\begin{lstlisting}
+void Euler_Step(float h)
+{
+
+}
+\end{lstlisting}
+
+\begin{problem}
+Write down the 3D gravity force applied on a particle in terms of $g=9.8$ and particle variables.
+\end{problem}
+\textbf{\textcolor{red}{\TODO}} $F_{gravity}=[\TODOL2,\TODOL2,\TODOL2]$
+
+\begin{problem}
+According to the collision handling definition in the accompanying
+document, the particles should be reflected when they hit the ground.
+Select True or False and correct the sentence if False.
+
+\TODO (T/F) The y-coordinate of a particle's position can be used to detect
+the collision with the ground.
+
+\TODO (T/F) If the particle is above the ground level, the y-coordinate of the
+particle's position should be set to 0.
+
+\TODO (T/F) The z-coordinate of the particle's velocity should be inverted
+($v_z=-v_z$) if the particle is below the ground and its $v_z$ is less than 0.
+
+\TODO (T/F) The damping coefficient is used to control the bounciness of
+particles when they hit the ground. The y-component of the velocity
+should be changed according to this coefficient.
+
+\TODO (T/F) The coefficient of restitution is applied to the tangential
+velocity of the particles to create an effect of friction.
+
+\TODO (T/F) Damping and restitution should only be applied if the particle is
+below the ground and its velocity is pointing downwards ($v_y < 0$).
+
+\TODO (T/F) Both damping and restitution coefficients are selected to be
+between -1 and 1.
+\end{problem}
+\\
+\\
+\textbf{Important Note:} In the particle document, section 4 paragraph 4, it says
+to apply the force representing friction to the x and y velocities of
+the particle. It should instead be applied to the x and z velocities
+when appropriate.
+\\
+\\
+\begin{problem}
+We can draw a line showing the particle trail in the simulation. For this purpose, one can trace the earlier positions of a particle or find
+a point in the direction of the velocity of a particle and draw a line from this point to the particle position. Given the particle variables
+above, find a point $x_{old}$ that is $s*|v|$ away from the position $x$ of the particle in the direction of its velocity $v$.
+\end{problem}
+\\
+$x_{old}=\TODOL2$
+\\
+
+
+\begin{problem}
+Given that x and x\_old are vec3, write the OpenGL code that draws a
+line from x to x\_old:
+\end{problem}
+\begin{lstlisting}
+glBegin(                        );
+
+
+glEnd();
+\end{lstlisting}
+
+
+
+\section*{Part 2: Implementation}
+
+Here is a brief outline of what you'll need to do in this lab. See the
+next pages for details.
+
+\begin{itemize}
+\item
+  Download the skeleton code and compile/run it.
+\item
+  Create a particle class/struct.
+\item
+  Add member functions to simulate particles and handle collisions.
+\item
+  Add global variable(s) to keep a list of particles.
+\item
+  Add helper functions to add randomly initialized particles.
+\item
+  Use the helper functions to generate some initial particles in the init\_event function.
+\item
+  Modify the draw\_event function to draw particles.
+\item
+  Run and test if the particles are properly created and drawn. (you can hide the volcano by pressing the `v' key while the program window is in focus)
+\item
+  Simulate the particles and handle collisions in the draw\_event
+  function. Run and test again.
+\item
+  Modify the draw\_event~function so that it will generate new particles
+  at every call.
+\item
+  Play with the coefficients of restitution and damping to get different
+  collision effects.
+\item
+  Add a time variable and update the color of the particles according to time in the draw\_event function.
+\end{itemize}
+
+Complete the exercises below and update your code accordingly:
+
+\begin{problem}
+Fill the Particle struct definition below with the required
+variables for its dynamics and its visual state (color) and add it to application.cpp.
+\end{problem}
+\begin{lstlisting}
+struct Particle
+{
+
+
+
+
+
+};
+\end{lstlisting}
+
+Add the following member functions to the particle class/struct and
+implement them according to the documentation.
+\begin{lstlisting}
+void Euler_Step(float h) // update v and x with an Forward Euler Step 
+                         // (see particle.pdf and Part 1.1)
+
+void Reset_Forces() // reset force to 0 vector;
+
+void Handle_Collision(float damping, float coeff_resititution) 
+// reflect particle on ground and apply damping and restitution
+// (see Force Sources section of the document and Part 1.3)
+\end{lstlisting}
+
+Create a vector that stores a list of particles globally in application.cpp.
+
+Add these global helper functions to application.cpp
+
+\begin{lstlisting}
+void Add_Particles(int n) 
+// generates n random particles, and appends to the particle vector.
+
+float random(float low, float high)
+// returns a random float between low and high
+\end{lstlisting}
+
+
+Particle initial value suggestions:
+\begin{itemize}
+\item mass of particle: 1
+\item start position of a particle, x: (random(-0.2,0.2), 0.05,random(-0.2,0.2))
+\item start velocity of a particle, v: (10*x.x,random(1,10),10*x.z)
+\item color of the particle: yellow
+\end{itemize}
+
+Play with the numbers to take the simulation to your liking
+
+At every draw\_event call (in application.cpp), your code should:
+
+\begin{itemize}
+\item Create new particles. Use the Add\_Particles helper function.
+\item Iterate over each particle and update its dynamics according
+to the Table (correctly ordered).
+\item Draw each particle p as a line from p.x to p.x+0.04*p.v (with color of the particle).
+\end{itemize}
+
+Create 10 new particles in the init\_event.
+
+Draw your particles in the draw\_event function (see comments in
+the code for exact location). Test your code.
+
+Create 20 new particles in the draw\_event function (in the
+beginning of the `if not paused' block). This will add 20 new particles
+every h seconds. Change the value if you want more.
+
+*You'll implement the 2nd step in the following part.
+
+\begin{problem}
+Order the code below so that it will update the particle dynamics at each frame. Implement this as the 2nd step of the algorithm in Part 2.4 in your code.
+\end{problem}
+
+Order: \TODOL4
+
+\begin{tabular}{ | l | l | }
+\hline
+A & Add forces \\[0.3em]
+\hline
+B  & Handle the collisions: correct velocity and position if it hits the ground.\\[0.3em]
+\hline
+C & Set total/accumulated force to 0 \\[0.3em]
+\hline
+D & For each particle p:\\[0.3em]
+\hline
+E & Use explicit Euler step to update the position and the velocity\\[0.3em]
+\hline
+\end{tabular}
+
+\begin{problem}
+Test your code with the following values and briefly describe their
+effect in the simulation:
+\end{problem}
+
+Damping (0, 0.5, 1):\\[0.5em]
+\TODO  \\[0.5em]
+\TODO  \\[0.5em]
+\TODO  \\[0.5em]
+
+Restitution (0, 0.5, 1):\\[0.5em]
+\TODO  \\[0.5em]
+\TODO  \\[0.5em]
+\TODO  \\[0.5em]
+
+Play with these parameters so that the simulation would look as you
+like.
+
+Change color dynamically.
+\begin{itemize}
+\item Add a new variable duration (d) in the particle class.
+
+\item Initially, the d value of every particle should be set to 0. Change
+the Add\_Particles function accordingly.
+
+\item Update d with the time-step h: d = d + h before you draw the
+particles.
+
+\item Add a global helper function that returns the interpolated color:
+\begin{lstlisting}
+vec3 Get_Particle_Color(float d)
+\end{lstlisting}
+
+Your function should return a color according to:
+
+if d \textless{} 0.1: return yellow
+
+else if d \textless{} 1.5: return an interpolated value from yellow to red.
+
+else if d \textless{} 2: return red.
+
+else if d \textless{} 3: return an interpolated value from red to grey.
+
+else return grey.
+
+You can use (0.5, 0.5, 0.5) for grey.
+
+\item After you update the d value of the particle, update each
+particle's color with the return value of the Get\_Particle\_Color function,
+called with the particle's duration d as the input parameter.
+\end{itemize}
+
+\end{document}
