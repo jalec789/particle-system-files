@@ -19,12 +19,15 @@
 using namespace std;
 enum { NONE, AMBIENT, DIFFUSE, SPECULAR, NUM_MODES };
 
-
-
-const vec3 WHITE(1.0f, 1.0f, 1.0f);
-const vec3 YELLOW(1.0f, 1.0f, 0.0f);
-const vec3 GRAY(0.5f, 0.5f, 0.5f);
+//color code red: #FF 00 00
 const vec3 RED(1.0f, 0.0f, 0.0f);
+const vec3 BLACK(0.0f, 0.0f, 0.0f);
+const vec3 WHITE(1.0f, 1.0f, 1.0f);
+//yellow #FFFF00
+const vec3 YELLOW(1.0f, 1.0f, 0.0f);
+//grey #808080
+const vec3 GRAY(0.5f, 0.5f, 0.5f);
+//cyan #00FFFF
 const vec3 CYAN(0.0f, 1.0f, 1.0f);
 
 //returns a range between low and high
