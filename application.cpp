@@ -31,8 +31,8 @@ const vec3 GRAY(0.5f, 0.5f, 0.5f);
 const vec3 CYAN(0.0f, 1.0f, 1.0f);
 
 //returns a range between low and high
-float draw_line(float duration, float x_old, float x, float y_old, float y) {
-    return (duration - x_old) / (x - x_old) * (y - y_old) + y_old;
+float draw_line(float x, float x_old, float u, float c0, float c1) {
+    return (x - x_old) / (u - x_old) * (c1 - c0) + c0;
 }
 
 //returns a random float between low and high
@@ -249,6 +249,7 @@ void application::init_event()
             }
         }
     }
+    Add_Particles(10);//add ten in init
 }
 
 // triggered each time the application needs to redraw
@@ -290,7 +291,12 @@ void application::draw_event()
             particles[i].force[2] = 0.0f;
 
             //collision with ground
+            //particles[i].Handle_Collision(1.0, 0.5);
+            // particles[i].Handle_Collision(0.0, 0.5);
             particles[i].Handle_Collision(0.5, 0.5);
+            // particles[i].Handle_Collision(0.5, 0.0);
+            // particles[i].Handle_Collision(0.5, 1.0);
+
 
         //
         // UPDATE THE COLOR OF THE PARTICLE DYNAMICALLY
