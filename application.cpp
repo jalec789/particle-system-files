@@ -19,6 +19,144 @@
 using namespace std;
 enum { NONE, AMBIENT, DIFFUSE, SPECULAR, NUM_MODES };
 
+
+
+const vec3 WHITE(1.0f, 1.0f, 1.0f);
+const vec3 YELLOW(1.0f, 1.0f, 0.0f);
+const vec3 GRAY(0.5f, 0.5f, 0.5f);
+const vec3 RED(1.0f, 0.0f, 0.0f);
+const vec3 CYAN(0.0f, 1.0f, 1.0f);
+
+//returns a range between low and high
+float draw_line(float duration, float x_old, float x, float y_old, float y) {
+    return (duration - x_old) / (x - x_old) * (y - y_old) + y_old;
+}
+
+//returns a random float between low and high
+float random(float low, float high) {
+    return draw_line(rand(), 0.0f, static_cast<float> (RAND_MAX), low, high);
+}
+
+struct Particle {
+
+    vec3 position;
+    vec3 velocity;
+    float mass;
+    vec3 color;
+    vec3 force;
+    float duration;
+
+    void reset() {
+        // initial position
+        position[0] = random(-0.2f, 0.2f);
+        position[1] = 0.05f;
+        position[2] = random(-0.2f, 0.2f);
+
+        // initial velocity
+        velocity[0] = 10 * position[0];
+        velocity[1] = random(1.0f, 10.0f);
+        velocity[2] = 10 * position[2];
+
+        // initial color
+        color = YELLOW;
+
+        // constant mass?
+        mass = 1.0f;
+        force.make_zero();
+        duration = 0.0f;
+    }
+
+    // update v and x with a Foward Euler Step
+    void Euler_Step(float h) {
+        position += h * velocity;
+        velocity += force * (h / mass);
+    }
+
+    // reset force to 0 vector
+    void Reset_Forces() {
+        force.make_zero();
+    }
+
+    // reflect particle on ground,
+    // apply damping and restitution
+    void Handle_Collision(float damping, float coeff_restitution) {
+        // reflect particle on ground if y_position < 0
+        if (position[1] < 0) {
+            position[1] = 0;
+            //reflect and apply damping
+            if (velocity[1] < 0) {
+                velocity[0] *= damping;
+                velocity[1] *= -coeff_restitution;
+                velocity[2] *= damping;
+
+            }
+        }
+    }
+
+};
+
+vector<Particle> particles;
+
+// Generates n particles and appends
+void Add_Particles(size_t n) {
+
+    for (size_t i = 0; i < n; i++) {
+        Particle p;
+        p.reset();
+        particles.push_back(p);
+    }
+}
+
+vec3 Get_Particle_Color(float duration) {
+    vec3 interpolated_color;
+
+    if (0.0f <= duration && duration <= 0.05f) {
+        return CYAN;
+    }
+    else if (0.05f <= duration && duration <= 0.1f) {
+        interpolated_color = vec3(
+            draw_line(duration, 0.05f, 0.1f, CYAN[0], WHITE[0]),
+            draw_line(duration, 0.05f, 0.1f, CYAN[1], WHITE[1]),
+            draw_line(duration, 0.05f, 0.1f, CYAN[2], WHITE[2]));
+        return interpolated_color;
+    }
+    else if (0.1f <= duration && duration <= 0.7f) {
+        interpolated_color = vec3(
+            draw_line(duration, 0.1f, 0.7f, WHITE[0], YELLOW[0]),
+            draw_line(duration, 0.1f, 0.7f, WHITE[1], YELLOW[1]),
+            draw_line(duration, 0.1f, 0.7f, WHITE[2], YELLOW[2]));
+        return interpolated_color;
+    }
+    else if (0.7f <= duration && duration <= 1.5f) {
+        interpolated_color = vec3(
+            draw_line(duration, 0.7f, 1.5f, YELLOW[0], RED[0]),
+            draw_line(duration, 0.7f, 1.5f, YELLOW[1], RED[1]),
+            draw_line(duration, 0.7f, 1.5f, YELLOW[2], RED[2]));
+        return interpolated_color;
+    }
+    else if (1.5f <= duration && duration <= 2.0f) {
+        return RED;
+    }
+    else if (2.0f <= duration && duration <= 3.0f) {
+        interpolated_color = vec3(
+            draw_line(duration, 2.0f, 3.0f, RED[0], GRAY[0]),
+            draw_line(duration, 2.0f, 3.0f, RED[1], GRAY[1]),
+            draw_line(duration, 2.0f, 3.0f, RED[2], GRAY[2]));
+        return interpolated_color;
+    }
+    else {
+        assert(3.0f <= duration);
+        return GRAY;
+    }
+}
+
+
+
+
+
+
+
+
 void draw_grid(int dim);
 void draw_obj(obj *o, const gl_image_texture_map& textures);
 
@@ -122,13 +260,40 @@ void application::draw_event()
         //
         //ADD NEW PARTICLES
         //
+        if (particles.size() <= 7500) {
+            Add_Particles(20);
+        }
+
         //
         // SIMULATE YOUR PARTICLE HERE.
         //
         //
+        for (size_t i = 0; i < particles.size(); i++) {
+
+            //update duration of particle
+            particles[i].duration += h;
+
+            //reset partcle if duration is too long
+            if (particles[i].duration >= 4.0f){
+                particles[i].reset();
+            }
+
+            //update position and velocity
+            particles[i].Euler_Step(h);
+
+            //set force
+            particles[i].force[0] = 0.0f;
+            particles[i].force[1] = -9.8f * particles[i].mass;// y force is gravity
+            particles[i].force[2] = 0.0f;
+
+            //collision with ground
+            particles[i].Handle_Collision(0.5, 0.5);
+
         //
         // UPDATE THE COLOR OF THE PARTICLE DYNAMICALLY
         //
+            particles[i].color = Get_Particle_Color(particles[i].duration);
+        }
     }
 
     glLineWidth(2.0);
@@ -142,6 +307,28 @@ void application::draw_event()
         // glVertex3f(...) endpoint 2
         //
         //
+    for (size_t i = 0; i < particles.size(); i++) {
+
+        // Particle& this_particle = particles[i];
+        float delta_t = 0.04f;
+
+        glColor3f(
+            particles[i].color[0],
+            particles[i].color[1],
+            particles[i].color[2]);
+
+        glVertex3f(
+            particles[i].position[0],    // x0
+            particles[i].position[1],    // y0
+            particles[i].position[2]);   // z0
+
+        glVertex3f(
+            particles[i].position[0] + (delta_t * particles[i].velocity[0]),
+            particles[i].position[1] + (delta_t * particles[i].velocity[1]),
+            particles[i].position[2] + (delta_t * particles[i].velocity[2]));
+
+    }
+
     glEnd();
 
     // draw the volcano
